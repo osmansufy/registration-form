@@ -1,15 +1,5 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Container,
-  FormControl,
-  IconButton,
-  Input,
-  InputAdornment,
-  InputLabel,
-  TextField,
-} from "@material-ui/core";
-import clsx from "clsx";
+import { Container } from "@material-ui/core";
 
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
@@ -23,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
   },
 
-  withoutLabel: {
+  inputField: {
     marginTop: theme.spacing(3),
   },
 }));
@@ -37,7 +27,6 @@ const Registration = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    newUser: false,
     phone: "",
     error: "",
   });
@@ -45,7 +34,7 @@ const Registration = () => {
     showPassword: false,
     confirmPassword: false,
   });
-
+  const [loading, setloading] = useState(false);
   const handleClickShowPassword = (change) => {
     if (change == "password") {
       setValues({ ...values, showPassword: !values.showPassword });
@@ -108,6 +97,7 @@ const Registration = () => {
         phone: user.phone,
       };
       if (user.isValid) {
+        setloading(true);
         axios
           .post(
             "https://backend.imentalhealth.net/api/register/student",
@@ -118,6 +108,7 @@ const Registration = () => {
               position: toast.POSITION.TOP_RIGHT,
             });
             console.log(res);
+            setloading(false);
           })
           .catch((err) => {
             console.log(sendInfo);
@@ -125,6 +116,7 @@ const Registration = () => {
             toast.error("Registration Not completed", {
               position: toast.POSITION.TOP_RIGHT,
             });
+            setloading(false);
           });
       }
     }
@@ -139,7 +131,9 @@ const Registration = () => {
       email: user.email,
       password: user.password,
     };
+
     if (user.isValid) {
+      setloading(true);
       axios
         .post("https://backend.imentalhealth.net/api/login/student", sendInfo)
         .then((res) => {
@@ -153,6 +147,7 @@ const Registration = () => {
             progress: undefined,
           });
           console.log(res);
+          setloading(false);
         })
         .catch((err) => {
           console.log(sendInfo);
@@ -160,6 +155,7 @@ const Registration = () => {
           toast.error("Login Not Successful", {
             position: toast.POSITION.TOP_RIGHT,
           });
+          setloading(false);
         });
     }
   };
@@ -176,66 +172,20 @@ const Registration = () => {
               handleMouseDownPassword={handleMouseDownPassword}
               onSubmit={onSubmit}
               handleClickShowPassword={handleClickShowPassword}
+              loading={loading}
+              classes={classes}
             />
           ) : (
-            <>
-              <Login
-                user={user}
-                handleChange={handleChange}
-                values={values}
-                handleMouseDownPassword={handleMouseDownPassword}
-                signInUser={signInUser}
-                handleClickShowPassword={handleClickShowPassword}
-              />
-              {/* <form onSubmit={(e) => e.preventDefault()}>
-                <TextField
-                  value={user.email}
-                  onChange={handleChange}
-                  className={clsx(classes.margin, classes.textField)}
-                  name="email"
-                  label="Username/Email"
-                />
-                <FormControl
-                  className={clsx(classes.margin, classes.textField)}
-                >
-                  <InputLabel htmlFor="standard-adornment-password">
-                    Password
-                  </InputLabel>
-                  <Input
-                    name="password"
-                    type={values.showPassword ? "text" : "password"}
-                    value={user.password}
-                    onChange={handleChange}
-                    endAdornment={
-                      <InputAdornment position="end">
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={() => handleClickShowPassword("password")}
-                          onMouseDown={handleMouseDownPassword}
-                        >
-                          {values.showPassword ? (
-                            <Visibility />
-                          ) : (
-                            <VisibilityOff />
-                          )}
-                        </IconButton>
-                      </InputAdornment>
-                    }
-                  />
-                </FormControl>
-                <Button
-                  variant="contained"
-                  size="large"
-                  type="submit"
-                  color="secondary"
-                  type="submit"
-                  onClick={signInUser}
-                  className={classes.margin}
-                >
-                  Login
-                </Button>
-              </form> */}
-            </>
+            <Login
+              user={user}
+              handleChange={handleChange}
+              values={values}
+              handleMouseDownPassword={handleMouseDownPassword}
+              signInUser={signInUser}
+              handleClickShowPassword={handleClickShowPassword}
+              loading={loading}
+              classes={classes}
+            />
           )}
           <h4 style={{ textAlign: "center" }}>
             {!user?.newAccount ? (

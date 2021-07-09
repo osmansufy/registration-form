@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   Input,
@@ -10,7 +11,7 @@ import {
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import React from "react";
-
+import clsx from "clsx";
 const Login = ({
   user,
   handleChange,
@@ -18,6 +19,8 @@ const Login = ({
   handleMouseDownPassword,
   signInUser,
   handleClickShowPassword,
+  loading,
+  classes,
 }) => {
   return (
     <div>
@@ -26,13 +29,11 @@ const Login = ({
         <TextField
           value={user.email}
           onChange={handleChange}
-          //   className={clsx(classes.margin, classes.textField)}
+          className={clsx(classes.inputField)}
           name="email"
-          label="Username/Email"
+          label="Email"
         />
-        <FormControl
-        //   className={clsx(classes.margin, classes.textField)}
-        >
+        <FormControl className={clsx(classes.inputField)}>
           <InputLabel htmlFor="standard-adornment-password">
             Password
           </InputLabel>
@@ -42,7 +43,7 @@ const Login = ({
             value={user.password}
             onChange={handleChange}
             endAdornment={
-              <InputAdornment position="end">
+              <InputAdornment position="end" style={{ marginBottom: "10px" }}>
                 <IconButton
                   aria-label="toggle password visibility"
                   onClick={() => handleClickShowPassword("password")}
@@ -54,16 +55,19 @@ const Login = ({
             }
           />
         </FormControl>
+        {user.error ? (
+          <p style={{ color: "red", fontWeight: "bold" }}>{user.error}</p>
+        ) : (
+          ""
+        )}
         <Button
           variant="contained"
           size="large"
           type="submit"
           color="secondary"
-          type="submit"
           onClick={signInUser}
-          //   className={classes.margin}
         >
-          Login
+          {loading ? <CircularProgress color="secondary" /> : "Login"}
         </Button>
       </form>
     </div>

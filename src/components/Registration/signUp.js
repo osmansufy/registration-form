@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Button,
+  CircularProgress,
   FormControl,
   IconButton,
   Input,
@@ -10,6 +11,7 @@ import {
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import clsx from "clsx";
 const SignUp = ({
   user,
   handleChange,
@@ -17,6 +19,8 @@ const SignUp = ({
   handleMouseDownPassword,
   onSubmit,
   handleClickShowPassword,
+  loading,
+  classes,
 }) => {
   return (
     <div className="registration">
@@ -27,20 +31,23 @@ const SignUp = ({
           onChange={handleChange}
           name="name"
           label="Name"
+          className={clsx(classes.inputField)}
         />
         <TextField
           value={user.email}
           onChange={handleChange}
           name="email"
           label="Email"
+          className={clsx(classes.inputField)}
         />
         <TextField
           value={user.phone}
           onChange={handleChange}
           name="phone"
           label="phone"
+          className={clsx(classes.inputField)}
         />
-        <FormControl>
+        <FormControl className={clsx(classes.inputField)}>
           <InputLabel htmlFor="standard-adornment-password">
             Password
           </InputLabel>
@@ -62,7 +69,7 @@ const SignUp = ({
             }
           />
         </FormControl>
-        <FormControl>
+        <FormControl className={clsx(classes.inputField)}>
           <InputLabel htmlFor="standard-adornment-password">
             Confirm Password
           </InputLabel>
@@ -94,11 +101,13 @@ const SignUp = ({
           size="large"
           type="submit"
           color="secondary"
-          type="submit"
           onClick={onSubmit}
-          // className={classes.margin}
         >
-          Create an account
+          {loading ? (
+            <CircularProgress color="secondary" />
+          ) : (
+            "Create an account"
+          )}
         </Button>
       </form>
     </div>

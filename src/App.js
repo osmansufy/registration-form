@@ -6,7 +6,7 @@ import Registration from "./components/Registration/registration";
 
 function App() {
   return (
-    <div className="App ok">
+    <div className="App">
       <ToastContainer />
       <Registration />
     </div>
